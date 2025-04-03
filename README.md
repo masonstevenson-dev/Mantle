@@ -68,12 +68,12 @@ enum class EWeaponType: uint8
 USTRUCT()
 struct FMC_Weapon : public FMantleComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     // Some properties associated with a "weapon" and their default values
     EWeaponType WeaponType = EWeaponType::Unknown;
-	float Damage = 1.0f;
+    float Damage = 1.0f;
     float Durability = 100.0f;
 };
 
@@ -99,7 +99,7 @@ enum class ESecondaryElementType: uint8
 USTRUCT()
 struct FMC_Element : public FMantleComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     EPrimaryElementType PrimaryElement = EPrimaryElementType::None;
@@ -118,42 +118,42 @@ In your sword actor code, you can register an entity that describes your sword:
 ```c++
 void AShadowFlameSword::PreInitializeComponents()
 {
-	Super::PreInitializeComponents();
+    Super::PreInitializeComponents();
     
     MantleDB = UMantleEngineLibrary::GetMantleDB(GetGameInstance());
-	if (!MantleDB.IsValid())
-	{
-		UE_LOG(LogYourProj, Error, TEXT("Expected valid MantleDB instance."));
-		return;
-	}
+    if (!MantleDB.IsValid())
+    {
+        UE_LOG(LogYourProj, Error, TEXT("Expected valid MantleDB instance."));
+        return;
+    }
 
-	TArray<FInstancedStruct> ComponentList;
-	
+    TArray<FInstancedStruct> ComponentList;
+    
     // Create all the components that describe this entity
     FMC_Weapon WeaponComponent;
     WeaponComponent.WeaponType = EWeaponType::Sword;
     WeaponComponent.Damage = 30.0f;
-   	
+       
     FMC_Element ElementComponent;
     ElementComponent.SecondaryElement = ESecondaryElementType::Shadow;
     ElementComponent.PrimaryElement = EPrimaryElementType::Fire;
     
-	ComponentList.Add(FInstancedStruct::Make(WeaponComponent));
+    ComponentList.Add(FInstancedStruct::Make(WeaponComponent));
     ComponentList.Add(FInstancedStruct::Make(ElementComponent));
     
-	FGuid Result = MantleDB->AddEntity(ComponentList);
-	if(!Result.IsValid())
-	{
-		UE_LOG(LogYourProj, Error, TEXT("Expected AddEntity to have a valid result."));
-		return;
-	}
-	
-	MantleId = Result;
-	if (!MantleId.IsValid())
-	{
-		UE_LOG(LogYourProj, Error, TEXT("Expected valid entity id"));
-		return;
-	}
+    FGuid Result = MantleDB->AddEntity(ComponentList);
+    if(!Result.IsValid())
+    {
+        UE_LOG(LogYourProj, Error, TEXT("Expected AddEntity to have a valid result."));
+        return;
+    }
+    
+    MantleId = Result;
+    if (!MantleId.IsValid())
+    {
+        UE_LOG(LogYourProj, Error, TEXT("Expected valid entity id"));
+        return;
+    }
 }
 
 ```
@@ -180,15 +180,15 @@ For example, we may want to iterate through all entities with the *Spell* and *A
 UCLASS()
 class UMO_ApplyGravitySpells : public UMantleOperation
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	UMO_ApplyGravitySpells(const FObjectInitializer& Initializer);
-	
-	virtual void PerformOperation(FMantleOperationContext& Ctx) override;
+    UMO_ApplyGravitySpells(const FObjectInitializer& Initializer);
+    
+    virtual void PerformOperation(FMantleOperationContext& Ctx) override;
 
 protected:
-	FMantleComponentQuery SpellQuery;
+    FMantleComponentQuery SpellQuery;
     FMantleComponentQuery FlyingEnemyQuery;
 };
 ```
@@ -197,11 +197,11 @@ protected:
 UMO_ApplyGravitySpells::UMO_ApplyGravitySpells(const FObjectInitializer& Initializer): Super(Initializer)
 {
     // Query for AOE spells
-	SpellQuery.AddRequiredComponent<FMC_Spell>();
-	SpellQuery.AddRequiredComponent<FMC_AreaOfEffect>();
+    SpellQuery.AddRequiredComponent<FMC_Spell>();
+    SpellQuery.AddRequiredComponent<FMC_AreaOfEffect>();
     
     // Query for enemies that can fly
-	FlyingEnemyQuery.AddRequiredComponent<FMC_Enemy>();
+    FlyingEnemyQuery.AddRequiredComponent<FMC_Enemy>();
     FlyingEnemyQuery.AddRequiredComponent<FMC_Flight>();
 }
 
@@ -213,12 +213,12 @@ void UMO_ImpactDamage::PerformOperation(FMantleOperationContext& Ctx)
     while (SpellQueryResult.Next())
     {
         TArrayView<FGuid> SourceEntities = SpellQueryResult.GetEntities();
-		TArrayView<FMC_Spell> SpellInfo = SpellQueryResult.GetArrayView<FMC_Collision>();
-		TArrayView<FMC_AreaOfEffect> AOEInfo = SpellQueryResult.GetArrayView<FMC_AreaOfEffect>();
+        TArrayView<FMC_Spell> SpellInfo = SpellQueryResult.GetArrayView<FMC_Collision>();
+        TArrayView<FMC_AreaOfEffect> AOEInfo = SpellQueryResult.GetArrayView<FMC_AreaOfEffect>();
         
         for (int32 EntityIndex = 0; EntityIndex < SourceEntities.Num(); ++EntityIndex)
-		{
-			FMC_Spell Spell = SpellInfo[EntityIndex];
+        {
+            FMC_Spell Spell = SpellInfo[EntityIndex];
             FMC_AreaOfEffect AOE = AOEInfo[EntityIndex];
             
             if (!Spell.bIsActive)
@@ -239,19 +239,19 @@ void UMO_ImpactDamage::PerformOperation(FMantleOperationContext& Ctx)
     {
         TArrayView<FGuid> SourceEntities = SpellQueryResult.GetEntities();
         TArrayView<FMC_Enemy> EnemyInfo = SpellQueryResult.GetArrayView<FMC_Enemy>();
-		TArrayView<FMC_Flight> FlightInfo = SpellQueryResult.GetArrayView<FMC_Flight>();
+        TArrayView<FMC_Flight> FlightInfo = SpellQueryResult.GetArrayView<FMC_Flight>();
         
         for (int32 EntityIndex = 0; EntityIndex < SourceEntities.Num(); ++EntityIndex)
-		{ 
+        { 
             FMC_Enemy Enemy = FlightInfo[EntityIndex];
-			FMC_Flight EnemyFlight = FlightInfo[EntityIndex];
+            FMC_Flight EnemyFlight = FlightInfo[EntityIndex];
             
             if (EnemyFlight.bIsFlying)
             {
                 // Skip over enemies that aren't currently flying
                 continue;
             }
-         	
+             
             for (FMC_AreaOfEffect AoeRegion : ActiveGravitySpellAreas)
             {
                 // assume there is some helper fn that checks for overlaps
@@ -277,25 +277,25 @@ Unlike MantleComponents, these operations need to be registered in your game ins
 ```cpp
 void UYourGameInstance::ConfigureMantleEngine(UMantleEngine& MantleEngine)
 {
-	FMantleEngineLoopOptions PrePhysicsPhase;
-	PrePhysicsPhase.OperationGroups.AddDefaulted();
+    FMantleEngineLoopOptions PrePhysicsPhase;
+    PrePhysicsPhase.OperationGroups.AddDefaulted();
 
-	// These operations will run in the pre-physics tick group
-	PrePhysicsPhase.OperationGroups[0].Operations.Append({
-		Engine.NewOperation<UMO_YourCustomOperation_1>(),
-		Engine.NewOperation<UMO_YourCustomOperation_2>(),
-		Engine.NewOperation<UMO_YourCustomOperation_3>()
-	});
-	
-	Engine.ConfigureEngineLoop(TG_PrePhysics, PrePhysicsPhase);
+    // These operations will run in the pre-physics tick group
+    PrePhysicsPhase.OperationGroups[0].Operations.Append({
+        Engine.NewOperation<UMO_YourCustomOperation_1>(),
+        Engine.NewOperation<UMO_YourCustomOperation_2>(),
+        Engine.NewOperation<UMO_YourCustomOperation_3>()
+    });
+    
+    Engine.ConfigureEngineLoop(TG_PrePhysics, PrePhysicsPhase);
 
     // These operations will run in the frame-end tick group
-	FMantleEngineLoopOptions FrameEndPhase;
-	FrameEndPhase.OperationGroups.AddDefaulted();
-	FrameEndPhase.OperationGroups[0].Operations.Append({
-		Engine.NewOperation<UMO_YourCustomOperation_4>()
-	});
-	Engine.ConfigureEngineLoop(TG_LastDemotable, FrameEndPhase);
+    FMantleEngineLoopOptions FrameEndPhase;
+    FrameEndPhase.OperationGroups.AddDefaulted();
+    FrameEndPhase.OperationGroups[0].Operations.Append({
+        Engine.NewOperation<UMO_YourCustomOperation_4>()
+    });
+    Engine.ConfigureEngineLoop(TG_LastDemotable, FrameEndPhase);
 }
 ```
 

@@ -14,6 +14,12 @@ The main goal for this project is to explore ECS architecture and how it could b
 
 <br>
 
+## Supported Engine Versions
+
+Mantle currently supports **UE 5.4.**
+
+<br>
+
 ## Required Plugins
 
 This plugin uses my [AnankeCore](https://github.com/masonstevenson-dev/AnankeCore) plugin for logging. This plugin is currently required; however, I may make it optional in the future.

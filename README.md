@@ -211,7 +211,7 @@ UMO_ApplyGravitySpells::UMO_ApplyGravitySpells(const FObjectInitializer& Initial
     FlyingEnemyQuery.AddRequiredComponent<FMC_Flight>();
 }
 
-void UMO_ImpactDamage::PerformOperation(FMantleOperationContext& Ctx)
+void UMO_ApplyGravitySpells::PerformOperation(FMantleOperationContext& Ctx)
 {
     TArray<FMC_AreaOfEffect> ActiveGravitySpellAreas;
     FMantleIterator SpellQueryResult = Ctx.MantleDB->RunQuery(SpellQuery);

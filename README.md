@@ -317,6 +317,10 @@ Mantle uses [Parallel Arrays](https://en.wikipedia.org/wiki/Parallel_array) for 
 
 <br>
 
+![](images/db_architecture.png) 
+
+<br>
+
 So for example, an entity with components A, B, and F, would have an archetype of **ABF**. Then, when the component is stored in the db, these components are actually separated out and placed together with other components of the same type, from different entities.
 
 <br>

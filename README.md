@@ -313,7 +313,7 @@ Operations will run in the order you add them to an operation group. Currently h
 
 ## Under the Hood
 
-Mantle uses a [Struct of Arrays](https://en.wikipedia.org/wiki/AoS_and_SoA#Structure_of_arrays) (SOA) architecture for entity storage. This means that whenever a new entity is defined, mantle will assign it an "archetype" based on its component composition, and will then store each component of that entity in an array of components of the same type, from entities with the same archetype.
+Mantle uses [Parallel Arrays](https://en.wikipedia.org/wiki/Parallel_array) for entity storage. This means that whenever a new entity is defined, mantle will assign it an "archetype" based on its component composition, and will then store each component of that entity in an array of components of the same type, from entities with the same archetype.
 
 <br>
 

@@ -33,6 +33,18 @@
 
 #include "MantleTypes.generated.h"
 
+// Is it safe to add a container type (TArray, TMap, etc) to FMantleComponent?
+//   -> Currently, I think NO, it would result in a memory leak. Basically what I think happens is when you add an entity
+//      to the DB (see FMantleDBChunk::AddEntities), it creates a deep copy of the struct, including any TArray, TMap,
+//      etc (see ComponentInstance.GetScriptStruct()->CopyScriptStruct, FArrayProperty::CopyValuesInternal). However,
+//      when the entity is destroyed, we currently do not call the destructor on each component struct. So any memory
+//      that got allocated during the copy (array data for example), get leaked.
+//
+//		TODO(): To fix, need to fetch the script struct and call ScriptStruct->DestroyStruct(DataPtr) (see FMassArchetypeData::RemoveEntity for example)
+//
+// Do mantle components respect GC?
+//   -> No. So basically there is no point in using the UPROPERTY() tag on an FMantleComponent, and furthermore it is
+//      not safe to store a TObjectPtr<SomeUObject> and expect that object to not get GC'd.
 USTRUCT()
 struct MANTLERUNTIME_API FMantleComponent
 {

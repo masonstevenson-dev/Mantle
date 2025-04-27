@@ -53,7 +53,7 @@ enum class EMIPDestructionStrategy : uint8
  *	Defines a projectile actor that registers hit events with MantleEngine.
  */
 UCLASS()
-class AMantleImpactProjectile : public AMantleActor
+class MANTLERUNTIME_API AMantleImpactProjectile : public AMantleActor
 {
 	GENERATED_BODY()
 
